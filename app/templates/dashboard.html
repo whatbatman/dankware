@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block page_content %}
+<script>
+  var toggle = function(val) {
+  var mydiv = document.getElementById(val);
+  if (mydiv.style.display === 'none' || mydiv.style.display === '')
+    mydiv.style.display = 'block';
+  else
+    mydiv.style.display = 'none'
+  }
+</script>
+
+
+<table style="table-layout: fixed; width:100%">
+    <tr>
+        <td colspan="1"><h2>ID</h2></td>
+        <td colspan="1"><h2>IP</h2></td>
+        <td colspan="1"><h2>Hostname</h2></td>
+        <td colspan="1"><h2>Time</h2></td>
+        <td colspan="1"><h2>Action</h2></td>
+    </tr>
+{% for row in rows %}
+    <tr>
+        <td colspan="1">{{ row.id }}</td>
+        <td colspan="1">{{ row.ip }}</td>
+        <td colspan="1">{{ row.hostname }} </td>
+        <td colspan="1">{{ row.time }} </td>
+        <td colspan="1"><input type="button"value ="send cmds" onclick="toggle('{{row.id}}_btn')"></td>
+    </tr>
+    <tr>
+        <td colspan="5" style="word-wrap: break-all; display:none" id="{{row.id}}_btn">
+             {{ wtf.quick_form(form) }}
+            <p>
+                aasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfsdfasdfasdf
+            </p>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

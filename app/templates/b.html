@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block page_content %}
+<script>
+  var toggle = function(val) {
+  var mydiv = document.getElementById(val);
+  if (mydiv.style.display === 'none' || mydiv.style.display === '')
+    mydiv.style.display = 'block';
+  else
+    mydiv.style.display = 'none'
+  }
+</script>
+
+
+    {% for row in rows %}
+<table style="width:100%">
+    <tr>
+        <td>{{ row.ip }}</td>
+        <td>{{ row.hostname }}</td>
+        <td>{{ row.result }}</td>
+        <td><input type="button" value ="send cmds" onclick="toggle('{{row.ip}}_btn')"></td>
+    </tr>
+</table>
+<table style="width:100%">
+    <tr>
+    <td><input style="display:none" type="text" id="{{row.ip}}_btn"></td>
+    </tr>
+</table>
+    {% endfor %}
+
+
+
+{% endblock %}
