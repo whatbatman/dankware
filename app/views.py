@@ -3,7 +3,7 @@ import requests
 from werkzeug.datastructures import ImmutableMultiDict
 import base64
 from io import StringIO
-from flask import Flask, render_template, redirect, url_for, flash, session, abort, request
+from flask import Flask, render_template, redirect, url_for, flash, session, abort, request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager, UserMixin, login_user, logout_user, current_user, UserMixin
@@ -151,6 +151,10 @@ def dashboard_builder():
         return "ok"
     return render_template('dashboard.html', title='Dashboard', rows=rows, form=form)
 
-
+@app.route('/run_cmds', methods=['GET', 'POST'])
+def run_cmds():
+    r = requests.get('http://192.168.1.23:8080/test')
+    print "oh mygod"* 12
+    return jsonify(result='apples')
 
 

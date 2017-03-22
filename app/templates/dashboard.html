@@ -2,6 +2,9 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% block page_content %}
 <script>
+/*
+This function toggles the execution bar when the 'send cmds' button is pressed
+*/
   var toggle = function(val) {
   var mydiv = document.getElementById(val);
   if (mydiv.style.display === 'none' || mydiv.style.display === '')
@@ -9,10 +12,51 @@
   else
     mydiv.style.display = 'none'
   }
+
+/*
+This function searches the IP address bar column... Gotta expand this
+*/
+function tableSearch() {
+  // Declare variables 
+  var input, filter, table, tr, td, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("dashboard");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    } 
+  }
+}
+
+
+/*
+This function uses an AJAX call to pass the commands in the execution textbox to the
+backend, to be run from the client. The result gets added below the textbox
+*/
+function exec(cmd, result) {
+    $.post('/run_cmds', {
+        command: $(cmd).text(),
+    }).done(function(executed) {
+        document.getElementById(result).textContent=executed['result'];
+    }).fail(function() {
+        document.getElementById(result).textContent="err";
+    });
+}
+
+
 </script>
 
-
-<table style="table-layout: fixed; width:100%">
+<input type="text" id="myInput" onkeyup="tableSearch()" placeholder="Search for IPs..">
+<table style="table-layout: fixed; width:100%" id="dashboard">
     <tr>
         <td colspan="1"><h2>ID</h2></td>
         <td colspan="1"><h2>IP</h2></td>
@@ -30,12 +74,13 @@
     </tr>
     <tr>
         <td colspan="5" style="word-wrap: break-all; display:none" id="{{row.id}}_btn">
-             {{ wtf.quick_form(form) }}
-            <p>
-                aasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfsdfasdfasdf
-            </p>
+        <span>Enter Command:</span>
+        <input type="text" id="{{row.id}}_text">
+        <input type="button" id="{{row.id}}_calculate" value="Execute!" onclick="exec('{{row.id}}_text', '{{row.id}}_result')">
+        <span id="{{row.id}}_result"></span>
         </td>
     </tr>
 {% endfor %}
 </table>
 {% endblock %}
+
